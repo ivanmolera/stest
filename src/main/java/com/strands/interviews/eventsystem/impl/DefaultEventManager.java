@@ -79,7 +79,7 @@ public class DefaultEventManager implements EventManager
         }
     }
 
-    private void addToListenerList(Class aClass, InterviewEventListener listener)
+    protected void addToListenerList(Class aClass, InterviewEventListener listener)
     {
         if (!listenersByClass.containsKey(aClass))
             listenersByClass.put(aClass, new ArrayList());

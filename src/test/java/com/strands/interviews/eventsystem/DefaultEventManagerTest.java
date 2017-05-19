@@ -3,13 +3,14 @@ package com.strands.interviews.eventsystem;
 import com.strands.interviews.eventsystem.events.SimpleEvent;
 import com.strands.interviews.eventsystem.events.SubEvent;
 import com.strands.interviews.eventsystem.impl.DefaultEventManager;
+import com.strands.interviews.eventsystem.impl.ExtendedEventManager;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class DefaultEventManagerTest
 {
-    private EventManager eventManager = new DefaultEventManager();
+    private EventManager eventManager = new ExtendedEventManager();
 
     @Test
     public void testPublishNullEvent()
@@ -116,5 +117,19 @@ public class DefaultEventManagerTest
         eventManager.registerListener("some.key", eventListenerMock);
         eventManager.publishEvent(new SubEvent(this));
         assertFalse(eventListenerMock.isCalled());
+    }
+
+    @Test
+    public void testWhenNoHandledEventClassesThenListenAllEvents() {
+        EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SimpleEvent.class});
+        EventListenerMock eventListenerMock2 = new EventListenerMock(new Class[]{});
+
+        eventManager.registerListener("some.key", eventListenerMock);
+        eventManager.registerListener("another.key", eventListenerMock2);
+
+        eventManager.publishEvent(new SimpleEvent(this));
+
+        assertTrue(eventListenerMock.isCalled());
+        assertTrue(eventListenerMock2.isCalled());
     }
 }
