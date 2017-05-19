@@ -30,7 +30,7 @@ public class DefaultEventManager implements EventManager
         sendEventTo(event, calculateListeners(event.getClass()));
     }
 
-    private Collection calculateListeners(Class eventClass)
+    protected Collection calculateListeners(Class eventClass)
     {
         return (Collection) listenersByClass.get(eventClass);
     }
@@ -90,5 +90,12 @@ public class DefaultEventManager implements EventManager
     public Map getListeners()
     {
         return listeners;
+    }
+    public Map getListenersByClass()
+    {
+        return listenersByClass;
+    }
+    public void setListenersByClass(Map listenersByClass) {
+        this.listenersByClass = listenersByClass;
     }
 }

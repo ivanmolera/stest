@@ -1,5 +1,6 @@
 package com.strands.interviews.eventsystem.impl;
 
+import com.strands.interviews.eventsystem.InterviewEvent;
 import com.strands.interviews.eventsystem.InterviewEventListener;
 
 import java.util.*;
@@ -30,5 +31,31 @@ public class ExtendedEventManager extends DefaultEventManager {
                 }
             }
         }
+    }
+
+    @Override
+    protected Collection calculateListeners(Class eventClass) {
+        Map listenersByClass = super.getListenersByClass();
+
+        if (!listenersByClass.containsKey(eventClass))
+        {
+            Set keys = listenersByClass.keySet();
+
+            ArrayList listenersToAssign = new ArrayList();
+
+            keys.forEach((key) -> {
+                String eventClassName = eventClass.getName();
+                String registeredClassName = ((Class)key).getName();
+
+                if (!eventClassName.equals(registeredClassName) && key.getClass().isAssignableFrom(eventClass.getClass()))
+                {
+                    listenersToAssign.addAll((List)listenersByClass.get(key));
+                }
+            });
+            listenersByClass.put(eventClass, listenersToAssign);
+            super.setListenersByClass(listenersByClass);
+        }
+
+        return (Collection) super.getListenersByClass().get(eventClass);
     }
 }
